@@ -5,14 +5,14 @@ def download_playlist(url):
         'format': 'bestaudio/best',
         'extractaudio': True,
         'audioformat': 'mp3',
-        'outtmpl': 'songs/%(title)s.%(ext)s',  # Added ytdl/ directory prefix
+        'outtmpl': 'songs/%(title)s.%(ext)s',
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
             'preferredquality': '192'
         }],
-        'progress_hooks': [lambda d: print(f"Downloading: {d['filename']} - {d['_percent_str']} complete")], # Add progress hook
-        'ignoreerrors': True  # Skip unavailable videos
+        'progress_hooks': [lambda d: print(f"Downloading: {d['filename']} - {d['_percent_str']} complete")],
+        'ignoreerrors': True
     }
 
     try:
@@ -28,7 +28,7 @@ def download_playlist(url):
 
 if __name__ == "__main__":
     url = input("Enter the playlist URL: ")
-    if not url.strip():  # Check for empty input
+    if not url.strip():
         print("Please enter a valid URL")
     else:
         success = download_playlist(url)
