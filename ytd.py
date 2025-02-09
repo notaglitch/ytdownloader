@@ -1,18 +1,30 @@
 import yt_dlp
 
 def download_playlist(url):
+    def progress_hook(d):
+        if d['status'] == 'downloading' and d.get('_percent_str') == '  0.0%':
+            print(f"Started downloading: {d['filename']}")
+        elif d['status'] == 'finished':
+            print(f"Finished downloading: {d['filename']}")
+
     ydl_opts = {
-        'format': 'bestaudio/best',
+        'format': 'bestaudio[abr<=128]/bestaudio',
         'extractaudio': True,
         'audioformat': 'mp3',
         'outtmpl': 'songs/%(title)s.%(ext)s',
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
-            'preferredquality': '192'
+            'preferredquality': '128'
         }],
-        'progress_hooks': [lambda d: print(f"Downloading: {d['filename']} - {d['_percent_str']} complete")],
-        'ignoreerrors': True
+        'progress_hooks': [progress_hook],
+        'ignoreerrors': True,
+        'concurrent_fragment_downloads': 30,
+        'buffersize': 4096,
+        'format_sort': ['abr:128'],
+        'postprocessor_args': ['-q:a', '0'],
+        'lazy_playlist': True,
+        'n_threads': 4,
     }
 
     try:
